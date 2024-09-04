@@ -1,9 +1,7 @@
 import 'dart:math';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_learn_demo/guess/result_notice.dart';
-
 import 'guess_app_bar.dart';
 
 class GuessPage extends StatefulWidget {
@@ -73,15 +71,13 @@ class _GuessPageState extends State<GuessPage> {
       body: Stack(
         children: [
           if (_isBig != null)
-          Column(
-            children: [
-              if (_isBig!)
-              const ResultNotice(Colors.redAccent, '大了'),
-              const Spacer(),
-              if(!_isBig!)
-              const ResultNotice(Colors.blueAccent, '小了'),
-            ],
-          ),
+            Column(
+              children: [
+                if (_isBig!) const ResultNotice(Colors.redAccent, '大了'),
+                const Spacer(),
+                if (!_isBig!) const ResultNotice(Colors.blueAccent, '小了'),
+              ],
+            ),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -1,7 +1,7 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_learn_demo/guess/result_notice.dart';
 
 import 'guess_app_bar.dart';
@@ -21,6 +21,8 @@ class _GuessPageState extends State<GuessPage> {
   int _value = 0;
   final Random _random = Random();
   bool _guessing = false;
+  bool? _isBig;
+  final TextEditingController _guessCtrl = TextEditingController();
 
   void _generateRandomValue() {
     setState(() {
@@ -29,7 +31,29 @@ class _GuessPageState extends State<GuessPage> {
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
+      _guessing = true;
       _value = _random.nextInt(100);
+    });
+  }
+
+  void _onCheck() {
+    if (kDebugMode) {
+      print("=====Check:目标数值:$_value=====${_guessCtrl.text}============");
+    }
+    int? guessNum = int.tryParse(_guessCtrl.text);
+    if (guessNum == null || !_guessing) {
+      return;
+    }
+    if (guessNum == _value) {
+      setState(() {
+        _isBig = null;
+        _guessing = false;
+      });
+      return;
+    }
+
+    setState(() {
+      _isBig = guessNum > _value;
     });
   }
 
@@ -42,13 +66,20 @@ class _GuessPageState extends State<GuessPage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: const GuessAppBar(),
+      appBar: GuessAppBar(
+        onCheck: _onCheck,
+        controller: _guessCtrl,
+      ),
       body: Stack(
         children: [
-          const Column(
+          if (_isBig != null)
+          Column(
             children: [
-              ResultNotice(Colors.redAccent, '大了'),
-              ResultNotice(Colors.blueAccent, '小了'),
+              if (_isBig!)
+              const ResultNotice(Colors.redAccent, '大了'),
+              const Spacer(),
+              if(!_isBig!)
+              const ResultNotice(Colors.blueAccent, '小了'),
             ],
           ),
           Center(
@@ -59,7 +90,7 @@ class _GuessPageState extends State<GuessPage> {
                   '点击生成随机数值',
                 ),
                 Text(
-                  '$_value',
+                  _guessing ? '**' : '$_value',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ],
@@ -68,10 +99,17 @@ class _GuessPageState extends State<GuessPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _generateRandomValue,
+        onPressed: _guessing ? null : _generateRandomValue,
+        backgroundColor: _guessing ? Colors.grey : Colors.blue,
         tooltip: 'Increment',
         child: const Icon(Icons.generating_tokens_outlined),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  @override
+  void dispose() {
+    _guessCtrl.dispose();
+    super.dispose();
   }
 }

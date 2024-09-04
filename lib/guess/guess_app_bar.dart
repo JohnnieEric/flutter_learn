@@ -3,10 +3,9 @@ import 'package:flutter/services.dart';
 
 class GuessAppBar extends StatelessWidget implements PreferredSizeWidget{
   
-  
-  const GuessAppBar({super.key});
-
-  
+  final VoidCallback onCheck;
+  final TextEditingController controller;
+  const GuessAppBar({super.key, required this.onCheck, required this.controller});
   
   @override
   Widget build(BuildContext context) {
@@ -17,14 +16,15 @@ class GuessAppBar extends StatelessWidget implements PreferredSizeWidget{
       actions: [
         IconButton(
             splashRadius: 20,
-            onPressed: () {},
+            onPressed: onCheck,
             icon: const Icon(Icons.run_circle_outlined, color: Colors.blue))
       ],
       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       //中间部分
-      title: const TextField(
+      title: TextField(
+        controller: controller,
         keyboardType: TextInputType.number,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
             filled: true,
             fillColor: Color(0xfff3f6f9),
             constraints: BoxConstraints(maxHeight: 35),

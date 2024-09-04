@@ -9,7 +9,7 @@ class ResultNotice extends StatelessWidget {
   Expanded _buildResultNotice() {
     return Expanded(
         child: Container(
-            // alignment: Alignment.center,
+            alignment: Alignment.center,
             color: color,
             child: Text(info,
                 style: const TextStyle(

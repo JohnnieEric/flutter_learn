@@ -1,25 +1,43 @@
 import 'package:flutter/material.dart';
 
-class ResultNotice extends StatelessWidget {
+class ResultNotice extends StatefulWidget {
   final Color color;
   final String info;
 
   const ResultNotice(this.color, this.info, {super.key});
 
-  Expanded _buildResultNotice() {
+  @override
+  State<StatefulWidget> createState() {
+    return _ResultNoticeState();
+  }
+}
+
+class _ResultNoticeState extends State<ResultNotice> with SingleTickerProviderStateMixin{
+  
+  late AnimationController controller;
+  
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200)
+    );
+  }
+  
+  @override
+  Widget build(BuildContext context) {
     return Expanded(
         child: Container(
             alignment: Alignment.center,
-            color: color,
-            child: Text(info,
+            color: widget.color,
+            child: Text(widget.info,
                 style: const TextStyle(
                     fontSize: 54,
                     color: Colors.white,
                     fontWeight: FontWeight.bold))));
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildResultNotice();
-  }
+  
 }
+
+

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_learn_demo/counter/counter_page.dart';
 import 'package:flutter_learn_demo/guess/guess_page.dart';
+import 'package:flutter_learn_demo/templeblock/temple_block_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,7 +35,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const GuessPage(title: '猜数字'),
+      // home: const GuessPage(title: '猜数字'),
+      home: const TempleBlockPage(),
     );
   }
 }

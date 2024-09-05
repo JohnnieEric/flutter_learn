@@ -41,6 +41,10 @@ class _ResultNoticeState extends State<ResultNotice>
         color: widget.color,
         child: AnimatedBuilder(
             animation: controller,
+            /**
+             * typedef TransitionBuilder = Widget Function(BuildContext context, Widget? child);
+             * 表示返回值为Widget，入参分别为BuildContext和Widget
+             */
             builder: (_, child) => Text(widget.info,
                 style: TextStyle(
                     fontSize: 54 * (controller.value),

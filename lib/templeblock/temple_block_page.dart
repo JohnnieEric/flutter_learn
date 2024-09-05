@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_learn_demo/templeblock/count_panel.dart';
+import 'package:flutter_learn_demo/templeblock/knock_animate_text.dart';
 import 'package:flutter_learn_demo/templeblock/temple_block_image.dart';
 import 'package:flame_audio/flame_audio.dart';
 
@@ -38,9 +39,15 @@ class _TempleBlockPageState extends State<TempleBlockPage> {
                   onTapSwitchAudio: () {},
                   onTapSwitchImage: () {})),
           Expanded(
-              child: TempleBlockImage(
-            onTap: _knockTempleBlock,
-          )),
+              child: Stack(
+                alignment: Alignment.topCenter,
+            children: [
+              TempleBlockImage(
+                onTap: _knockTempleBlock,
+              ),
+              if (_addCounter != 0) KnockAnimateText(text: '功德+$_addCounter')
+            ],
+          ))
         ],
       ),
     );

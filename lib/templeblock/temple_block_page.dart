@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_learn_demo/templeblock/count_panel.dart';
 import 'package:flutter_learn_demo/templeblock/temple_block_image.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 class TempleBlockPage extends StatefulWidget {
   const TempleBlockPage({super.key});
@@ -12,23 +15,50 @@ class TempleBlockPage extends StatefulWidget {
 }
 
 class _TempleBlockPageState extends State<TempleBlockPage> {
+  int _counter = 0;
+  int _addCounter = 0;
+  final Random random = Random();
+  AudioPool? pool;
+  
+  @override
+  void initState() {
+    super.initState();
+    _initAudioPool();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: _buildAppBar(),
       body: Column(
         children: [
           Expanded(
               child: CountPanel(
-                  count: 0, onTapSwitchAudio: () {}, onTapSwitchImage: () {})),
-          const Expanded(child: TempleBlockImage()),
+                  count: _counter,
+                  onTapSwitchAudio: () {},
+                  onTapSwitchImage: () {})),
+          Expanded(
+              child: TempleBlockImage(
+            onTap: _knockTempleBlock,
+          )),
         ],
       ),
     );
   }
+  
+  Future<void> _initAudioPool() async {
+    pool = await FlameAudio.createPool(
+      /***
+       * flame_audio 资源位置默认为asserts/audio中
+       */
+      'temple_block_1.mp3',
+      minPlayers: 3,
+      maxPlayers: 4,
+    );
+  }
 
   /// 标题栏
-  AppBar buildAppBar() {
+  AppBar _buildAppBar() {
     return AppBar(
       /***
        * 标题栏的阴影深度
@@ -53,4 +83,12 @@ class _TempleBlockPageState extends State<TempleBlockPage> {
 
   ///去历史页面
   void _toHistory() {}
+
+  void _knockTempleBlock() {
+    pool?.start();
+    setState(() {
+      _addCounter = 1 + random.nextInt(3);
+      _counter += _addCounter;
+    });
+  }
 }

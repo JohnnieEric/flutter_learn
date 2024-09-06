@@ -11,7 +11,7 @@ class TempleBlockImage extends StatelessWidget {
         child: GestureDetector(
       onTap: onTap,
       child: Image.asset(
-        'assets/images/temple_block.png',
+        'assets/images/temple_block_1.png',
         height: 200,
         width: 200,
       ),

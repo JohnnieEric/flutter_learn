@@ -23,7 +23,8 @@ class TempleBlockPage extends StatefulWidget {
   }
 }
 
-class _TempleBlockPageState extends State<TempleBlockPage> {
+class _TempleBlockPageState extends State<TempleBlockPage>
+    with SingleTickerProviderStateMixin {
   int _counter = 0;
   int _addCounter = 0;
   final Random random = Random();
@@ -31,6 +32,7 @@ class _TempleBlockPageState extends State<TempleBlockPage> {
   int _selectedSoundIndex = 0;
   List<MeritRecord> recordMeritList = [];
   final Uuid uuid = const Uuid();
+  late AnimationController controller;
 
   AudioPool? pool;
   List<ImageOption> imageOptionList = [
@@ -58,6 +60,15 @@ class _TempleBlockPageState extends State<TempleBlockPage> {
   void initState() {
     super.initState();
     _initAudioPool();
+    controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+  }
+  
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+    pool?.dispose();
   }
 
   @override
@@ -79,7 +90,9 @@ class _TempleBlockPageState extends State<TempleBlockPage> {
                 imageResource: selectedImage,
                 onTap: _knockTempleBlock,
               ),
-              if (_addCounter != 0) KnockAnimateText(text: '功德+$_addCounter')
+              if (_addCounter != 0)
+                KnockAnimateText(
+                    text: '功德+$_addCounter', controller: controller)
             ],
           ))
         ],
@@ -137,6 +150,7 @@ class _TempleBlockPageState extends State<TempleBlockPage> {
 
   void _knockTempleBlock() {
     pool?.start();
+    controller.forward(from: 0);
     setState(() {
       _addCounter = knockValue;
       _counter += _addCounter;

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class KnockAnimateText extends StatefulWidget {
   final String text;
+  final AnimationController controller;
 
-  const KnockAnimateText({super.key, required this.text});
+  const KnockAnimateText({super.key, required this.text, required this.controller});
 
   @override
   State<StatefulWidget> createState() {
@@ -13,34 +14,20 @@ class KnockAnimateText extends StatefulWidget {
 
 class _KnockAnimateTextState extends State<KnockAnimateText>
     with SingleTickerProviderStateMixin {
-  late AnimationController controller;
+  
   late Animation<double> fadeAnimation;
   late Animation<double> scaleAnimation;
   late Animation<Offset> translateAnimation;
-
+  
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
-    fadeAnimation = Tween(begin: 1.0, end: 0.0).animate(controller);
-    scaleAnimation = Tween(begin: 1.0, end: 0.9).animate(controller);
+    fadeAnimation = Tween(begin: 1.0, end: 0.0).animate(widget.controller);
+    scaleAnimation = Tween(begin: 1.0, end: 0.9).animate(widget.controller);
     translateAnimation =
         Tween<Offset>(begin: const Offset(0, 2), end: Offset.zero)
-            .animate(controller);
-    controller.forward();
-  }
-
-  @override
-  void didUpdateWidget(covariant KnockAnimateText oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    controller.forward(from: 0);
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+            .animate(widget.controller);
+    widget.controller.forward();
   }
 
   @override

@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_learn_demo/templeblock/count_panel.dart';
+import 'package:flutter_learn_demo/templeblock/history/bean/merit_record.dart';
+import 'package:flutter_learn_demo/templeblock/history/merit_record_page.dart';
 import 'package:flutter_learn_demo/templeblock/imageoption/bean/image_option.dart';
 import 'package:flutter_learn_demo/templeblock/knock_animate_text.dart';
 import 'package:flutter_learn_demo/templeblock/imageoption/select_image_panel.dart';
@@ -10,6 +12,7 @@ import 'package:flutter_learn_demo/templeblock/imageoption/temple_block_image.da
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter_learn_demo/templeblock/soundoption/bean/sound_option.dart';
 import 'package:flutter_learn_demo/templeblock/soundoption/select_sound_panel.dart';
+import 'package:uuid/uuid.dart';
 
 class TempleBlockPage extends StatefulWidget {
   const TempleBlockPage({super.key});
@@ -26,6 +29,8 @@ class _TempleBlockPageState extends State<TempleBlockPage> {
   final Random random = Random();
   int _selectedImageIndex = 0;
   int _selectedSoundIndex = 0;
+  List<MeritRecord> recordMeritList = [];
+  final Uuid uuid = const Uuid();
 
   AudioPool? pool;
   List<ImageOption> imageOptionList = [
@@ -45,6 +50,9 @@ class _TempleBlockPageState extends State<TempleBlockPage> {
 
   String get selectedSound =>
       soundOptionList[_selectedSoundIndex].soundResource;
+
+  String get selectedSoundName =>
+      soundOptionList[_selectedSoundIndex].soundName;
 
   @override
   void initState() {
@@ -115,7 +123,11 @@ class _TempleBlockPageState extends State<TempleBlockPage> {
   }
 
   ///去历史页面
-  void _toHistory() {}
+  void _toHistory() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return MeritRecordPage(recordList: recordMeritList);
+    }));
+  }
 
   int get knockValue {
     int min = imageOptionList[_selectedImageIndex].min;
@@ -128,6 +140,16 @@ class _TempleBlockPageState extends State<TempleBlockPage> {
     setState(() {
       _addCounter = knockValue;
       _counter += _addCounter;
+      String id = uuid.v4();
+      recordMeritList.insert(
+          0,
+          MeritRecord(
+            id,
+            DateTime.now().millisecondsSinceEpoch,
+            _addCounter,
+            selectedImage,
+            selectedSoundName,
+          ));
     });
   }
 

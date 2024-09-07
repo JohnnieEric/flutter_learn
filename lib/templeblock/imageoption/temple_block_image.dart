@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 class TempleBlockImage extends StatelessWidget {
   final VoidCallback onTap;
+  final String imageResource;
 
-  const TempleBlockImage({super.key, required this.onTap});
+  const TempleBlockImage(
+      {super.key, required this.imageResource, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +13,7 @@ class TempleBlockImage extends StatelessWidget {
         child: GestureDetector(
       onTap: onTap,
       child: Image.asset(
-        'assets/images/temple_block_1.png',
+        imageResource,
         height: 200,
         width: 200,
       ),

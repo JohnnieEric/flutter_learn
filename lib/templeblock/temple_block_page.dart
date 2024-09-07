@@ -8,6 +8,8 @@ import 'package:flutter_learn_demo/templeblock/knock_animate_text.dart';
 import 'package:flutter_learn_demo/templeblock/imageoption/select_image_panel.dart';
 import 'package:flutter_learn_demo/templeblock/imageoption/temple_block_image.dart';
 import 'package:flame_audio/flame_audio.dart';
+import 'package:flutter_learn_demo/templeblock/soundoption/bean/sound_option.dart';
+import 'package:flutter_learn_demo/templeblock/soundoption/select_sound_panel.dart';
 
 class TempleBlockPage extends StatefulWidget {
   const TempleBlockPage({super.key});
@@ -22,15 +24,27 @@ class _TempleBlockPageState extends State<TempleBlockPage> {
   int _counter = 0;
   int _addCounter = 0;
   final Random random = Random();
-  int _selectedIndex = 0;
+  int _selectedImageIndex = 0;
+  int _selectedSoundIndex = 0;
+
   AudioPool? pool;
   List<ImageOption> imageOptionList = [
     ImageOption('基础版', 'assets/images/temple_block_1.png', 1, 3),
     ImageOption('尊享版', 'assets/images/temple_block_2.png', 3, 6)
   ];
 
+  List<SoundOption> soundOptionList = [
+    SoundOption('音效1', 'temple_block_1.mp3'),
+    SoundOption('音效2', 'temple_block_2.mp3'),
+    SoundOption('音效3', 'temple_block_3.mp3'),
+  ];
+
   ///选择的图片资源
-  String get selectedImage => imageOptionList[_selectedIndex].imageResource;
+  String get selectedImage =>
+      imageOptionList[_selectedImageIndex].imageResource;
+
+  String get selectedSound =>
+      soundOptionList[_selectedSoundIndex].soundResource;
 
   @override
   void initState() {
@@ -54,6 +68,7 @@ class _TempleBlockPageState extends State<TempleBlockPage> {
             alignment: Alignment.topCenter,
             children: [
               TempleBlockImage(
+                imageResource: selectedImage,
                 onTap: _knockTempleBlock,
               ),
               if (_addCounter != 0) KnockAnimateText(text: '功德+$_addCounter')
@@ -69,7 +84,7 @@ class _TempleBlockPageState extends State<TempleBlockPage> {
       /***
        * flame_audio 资源位置默认为asserts/audio中
        */
-      'temple_block_1.mp3',
+      selectedSound,
       minPlayers: 3,
       maxPlayers: 4,
     );
@@ -103,8 +118,8 @@ class _TempleBlockPageState extends State<TempleBlockPage> {
   void _toHistory() {}
 
   int get knockValue {
-    int min = imageOptionList[_selectedIndex].min;
-    int max = imageOptionList[_selectedIndex].max;
+    int min = imageOptionList[_selectedImageIndex].min;
+    int max = imageOptionList[_selectedImageIndex].max;
     return min + random.nextInt(max + 1 - min);
   }
 
@@ -122,23 +137,39 @@ class _TempleBlockPageState extends State<TempleBlockPage> {
         builder: (BuildContext context) {
           return ImageOptionPanel(
             imageOptions: imageOptionList,
-            selectedIndex: _selectedIndex,
+            selectedIndex: _selectedImageIndex,
             onSelect: _onSelectImage,
           );
         });
   }
 
   void _onTapSwitchTempleBlockKnockSound() {
-    
+    showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) {
+          return SoundOptionPanel(
+              soundOptions: soundOptionList,
+              selectedIndex: _selectedSoundIndex,
+              onSelect: _onSelectSound);
+        });
+  }
+
+  Future<void> _onSelectSound(int value) async {
+    Navigator.of(context).pop();
+    if (value == _selectedSoundIndex) {
+      return;
+    }
+    _selectedSoundIndex = value;
+    pool = await FlameAudio.createPool(selectedSound, maxPlayers: 1);
   }
 
   void _onSelectImage(int value) {
     Navigator.of(context).pop();
-    if (value == _selectedIndex) {
+    if (value == _selectedImageIndex) {
       return;
     }
     setState(() {
-      _selectedIndex = value;
+      _selectedImageIndex = value;
     });
   }
 }

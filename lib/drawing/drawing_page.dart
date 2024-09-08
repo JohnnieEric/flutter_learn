@@ -160,6 +160,11 @@ class _DrawingPageState extends State<DrawingPage> {
 
   // 用户拖拽过程中，将触点添加到线列表最后一条线中。
   void _onPanUpdate(DragUpdateDetails details) {
+    Offset point = details.localPosition;
+    double distance = (_lines.last.points.last - point).distance;
+    if (distance <= 5) {
+      return;
+    }
     _lines.last.points.add(details.localPosition);
     setState(() {});
   }

@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_learn_demo/counter/counter_page.dart';
-// import 'package:flutter_learn_demo/guess/guess_page.dart';
-// import 'package:flutter_learn_demo/templeblock/temple_block_page.dart';
-
-import 'drawing/drawing_page.dart';
+import 'package:flutter_learn_demo/app_navigation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,9 +36,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         primaryColor: Colors.white,
       ),
-      // home: const GuessPage(title: '猜
-      // 数字'),
-      home: const DrawingPage(),
+      home: const AppNavigation(),
     );
   }
 }

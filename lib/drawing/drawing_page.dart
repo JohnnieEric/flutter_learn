@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_learn_demo/drawing/bean/line.dart';
 import 'package:flutter_learn_demo/drawing/paper_painter.dart';
+import 'package:flutter_learn_demo/drawing/selector/stroke_color_selector.dart';
+import 'package:flutter_learn_demo/drawing/selector/stroke_width_selector.dart';
 
 import '../conform_dialog.dart';
 
@@ -19,6 +21,8 @@ class DrawingPage extends StatefulWidget {
 
 class _DrawingPageState extends State<DrawingPage> {
   final List<Line> _lines = [];
+  int selectedStrokeWidthIndex = 0;
+  int selectedStrokeColorIndex = 0;
 
   final List<Color> supportColors = [
     Colors.black,
@@ -28,10 +32,20 @@ class _DrawingPageState extends State<DrawingPage> {
     Colors.green,
     Colors.blue,
     Colors.indigo,
-    Colors.purple
+    Colors.purple,
+    Colors.brown,
+    Colors.pink,
+    Colors.cyan,
+    Colors.lime,
+    Colors.teal
   ];
 
   final List<double> supportStrokeWidths = [1, 2, 4, 6, 8, 10];
+
+  double get selectedStrokeWidth =>
+      supportStrokeWidths[selectedStrokeWidthIndex];
+
+  Color get selectedStrokeColor => supportColors[selectedStrokeColorIndex];
 
   @override
   Widget build(BuildContext context) {
@@ -57,27 +71,91 @@ class _DrawingPageState extends State<DrawingPage> {
                 ))
           ],
         ),
-        body: GestureDetector(
-          /***
-           * 监听用户开始拖拽
-           */
-          onPanStart: _onPanStart,
-          /**
-           * 监听用户拖拽中
-           */
-          onPanUpdate: _onPanUpdate,
-          child: CustomPaint(
-            painter: PaperPainter(lines: _lines),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints.expand(),
+        body: Stack(
+          children: [
+            GestureDetector(
+              /***
+               * 监听用户开始拖拽
+               */
+              onPanStart: _onPanStart,
+              /**
+               * 监听用户拖拽中
+               */
+              onPanUpdate: _onPanUpdate,
+              child: CustomPaint(
+                painter: PaperPainter(lines: _lines),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints.expand(),
+                ),
+              ),
             ),
-          ),
+            /*Positioned(
+                bottom: 40,
+                child: StrokeColorSelector(
+                    supportColors: supportColors,
+                    selectedColorIndex: selectedStrokeColorIndex,
+                    onSelect: _selectStrokeWidthColor)),
+            Positioned(
+                right: 10,
+                bottom: 0,
+                child: StrokeWidthSelector(
+                    color: selectedStrokeColor,
+                    supportStrokeWidths: supportStrokeWidths,
+                    selectedIndex: selectedStrokeWidthIndex,
+                    onSelect: _selectStrokeWidth))*/
+            Positioned(
+              bottom: 0,
+              /**
+               * 获取屏幕宽度
+               */
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                children: [
+                  /**
+                   * Expanded的作用是让子widget填充Row或Column中剩余的空间
+                   */
+                  Expanded(
+                    child: StrokeColorSelector(
+                        supportColors: supportColors,
+                        selectedColorIndex: selectedStrokeColorIndex,
+                        onSelect: _selectStrokeWidthColor),
+                  ),
+                  StrokeWidthSelector(
+                      color: selectedStrokeColor,
+                      supportStrokeWidths: supportStrokeWidths,
+                      selectedIndex: selectedStrokeWidthIndex,
+                      onSelect: _selectStrokeWidth),
+                ],
+              ),
+            ),
+          ],
         ));
+  }
+
+  void _selectStrokeWidth(int index) {
+    if (index == selectedStrokeWidthIndex) {
+      return;
+    }
+    setState(() {
+      selectedStrokeWidthIndex = index;
+    });
+  }
+
+  void _selectStrokeWidthColor(int index) {
+    if (index == selectedStrokeColorIndex) {
+      return;
+    }
+    setState(() {
+      selectedStrokeColorIndex = index;
+    });
   }
 
   ///用户开始拖拽开始时，需要创建 Line 对象，加入线列表。
   void _onPanStart(DragStartDetails details) {
-    _lines.add(Line(points: [details.localPosition]));
+    _lines.add(Line(
+        points: [details.localPosition],
+        strokeWidth: selectedStrokeWidth,
+        color: selectedStrokeColor));
   }
 
   // 用户拖拽过程中，将触点添加到线列表最后一条线中。
@@ -89,8 +167,7 @@ class _DrawingPageState extends State<DrawingPage> {
   void _showClearDialog() {
     showDialog(
         context: context,
-        builder: (context) =>
-            ConformDialog(
+        builder: (context) => ConformDialog(
               title: '清空提示',
               msg: '您的当前操作会清空绘制内容，是否确定删除?',
               onConform: _clear,

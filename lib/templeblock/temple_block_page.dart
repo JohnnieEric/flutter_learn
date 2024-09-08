@@ -24,7 +24,7 @@ class TempleBlockPage extends StatefulWidget {
 }
 
 class _TempleBlockPageState extends State<TempleBlockPage>
-    with SingleTickerProviderStateMixin {
+    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   int _counter = 0;
   int _addCounter = 0;
   final Random random = Random();
@@ -63,7 +63,7 @@ class _TempleBlockPageState extends State<TempleBlockPage>
     controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
   }
-  
+
   @override
   void dispose() {
     super.dispose();
@@ -73,6 +73,7 @@ class _TempleBlockPageState extends State<TempleBlockPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: _buildAppBar(),
       body: Column(
@@ -208,4 +209,7 @@ class _TempleBlockPageState extends State<TempleBlockPage>
       _selectedImageIndex = value;
     });
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

@@ -19,7 +19,7 @@ class DrawingPage extends StatefulWidget {
   }
 }
 
-class _DrawingPageState extends State<DrawingPage> {
+class _DrawingPageState extends State<DrawingPage> with AutomaticKeepAliveClientMixin{
   final List<Line> _lines = [];
   int selectedStrokeWidthIndex = 0;
   int selectedStrokeColorIndex = 0;
@@ -49,6 +49,7 @@ class _DrawingPageState extends State<DrawingPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -185,4 +186,7 @@ class _DrawingPageState extends State<DrawingPage> {
     Navigator.pop(context);
     setState(() {});
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

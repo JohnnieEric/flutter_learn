@@ -18,6 +18,8 @@ class AppNavigation extends StatefulWidget {
 class _AppNavigationState extends State<AppNavigation> {
   int currentIndex = 0;
 
+  final PageController controller = PageController();
+
   final List<MenuData> menus = const [
     MenuData(label: '猜数字', icon: Icons.question_mark),
     MenuData(label: '电子木鱼', icon: Icons.my_library_music_outlined),
@@ -27,7 +29,7 @@ class _AppNavigationState extends State<AppNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildContext(currentIndex),
+      body: _buildContent(),
       bottomNavigationBar: AppBottomBar(
           currentIndex: currentIndex, menus: menus, onItemSelect: _selectItem),
     );
@@ -37,24 +39,21 @@ class _AppNavigationState extends State<AppNavigation> {
     if (index == currentIndex) {
       return;
     }
+    controller.jumpToPage(index);
     setState(() {
       currentIndex = index;
     });
   }
 
-  Widget _buildContext(int index) {
-    switch (index) {
-      case 0:
-        return const GuessPage(title: '猜数字');
-      case 1:
-        return const TempleBlockPage();
-      case 2:
-        return const DrawingPage();
-      default:
-        /***
-       * 创建一个宽度和高度都为 0 的 SizedBox。其实就是一个占用控件无限小的 Widget 占位符。
-       */
-        return const SizedBox.shrink();
-    }
+  Widget _buildContent() {
+    return PageView(
+      physics: const NeverScrollableScrollPhysics(),
+      controller: controller,
+      children: const [
+        GuessPage(title: '猜数字'),
+        TempleBlockPage(),
+        DrawingPage()
+      ],
+    );
   }
 }

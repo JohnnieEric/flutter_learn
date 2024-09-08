@@ -15,7 +15,7 @@ class GuessPage extends StatefulWidget {
   }
 }
 
-class _GuessPageState extends State<GuessPage> {
+class _GuessPageState extends State<GuessPage> with AutomaticKeepAliveClientMixin{
   int _value = 0;
   final Random _random = Random();
   bool _guessing = false;
@@ -57,6 +57,7 @@ class _GuessPageState extends State<GuessPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -108,4 +109,7 @@ class _GuessPageState extends State<GuessPage> {
     _guessCtrl.dispose();
     super.dispose();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

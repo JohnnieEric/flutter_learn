@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_learn_demo/guess/result_notice.dart';
+import 'package:flutter_learn_demo/sp_manager.dart';
 import 'guess_app_bar.dart';
 
 class GuessPage extends StatefulWidget {
@@ -15,12 +16,26 @@ class GuessPage extends StatefulWidget {
   }
 }
 
-class _GuessPageState extends State<GuessPage> with AutomaticKeepAliveClientMixin{
+class _GuessPageState extends State<GuessPage>
+    with AutomaticKeepAliveClientMixin {
   int _value = 0;
   final Random _random = Random();
   bool _guessing = false;
   bool? _isBig;
   final TextEditingController _guessCtrl = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _initSpConfig();
+  }
+
+  void _initSpConfig() async {
+    Map<String, dynamic> map = await SpManager.instance.readGuess();
+    _guessing = map['guessing'] ?? false;
+    _value = map['value'] ?? 0;
+    setState(() {});
+  }
 
   void _generateRandomValue() {
     setState(() {
@@ -31,6 +46,7 @@ class _GuessPageState extends State<GuessPage> with AutomaticKeepAliveClientMixi
       // called again, and so nothing would appear to happen.
       _guessing = true;
       _value = _random.nextInt(100);
+      SpManager.instance.saveGuess(guessing: true, value: _value);
     });
   }
 

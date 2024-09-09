@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_learn_demo/sp_manager.dart';
 import 'package:flutter_learn_demo/templeblock/count_panel.dart';
 import 'package:flutter_learn_demo/templeblock/history/bean/merit_record.dart';
 import 'package:flutter_learn_demo/templeblock/history/merit_record_page.dart';
@@ -62,6 +63,17 @@ class _TempleBlockPageState extends State<TempleBlockPage>
     _initAudioPool();
     controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
+    _initTempleBlockConifg();
+  }
+  
+  void _initTempleBlockConifg() async{
+    Map<String, dynamic> map  = await SpManager.instance.readTempleBlockConfig(); 
+    _selectedSoundIndex = map['selectedSoundIndex'];
+    _selectedImageIndex = map['selectedImageIndex'];
+    _counter = map['totalMeritCount'];
+    setState(() {
+      
+    });
   }
 
   @override

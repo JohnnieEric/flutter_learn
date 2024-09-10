@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_learn_demo/db_manager.dart';
 import 'package:flutter_learn_demo/sp_manager.dart';
 import 'package:flutter_learn_demo/templeblock/count_panel.dart';
 import 'package:flutter_learn_demo/templeblock/history/bean/merit_record.dart';
@@ -63,17 +64,17 @@ class _TempleBlockPageState extends State<TempleBlockPage>
     _initAudioPool();
     controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
-    _initTempleBlockConifg();
+    _initTempleBlockConfig();
   }
-  
-  void _initTempleBlockConifg() async{
-    Map<String, dynamic> map  = await SpManager.instance.readTempleBlockConfig(); 
-    _selectedSoundIndex = map['selectedSoundIndex'];
-    _selectedImageIndex = map['selectedImageIndex'];
-    _counter = map['totalMeritCount'];
-    setState(() {
-      
-    });
+
+  void _initTempleBlockConfig() async {
+    Map<String, dynamic> map = await SpManager.instance.readTempleBlockConfig();
+    ///发生崩溃，原因是没有处理为null
+    _selectedSoundIndex = map['selectedSoundIndex']??0;
+    _selectedImageIndex = map['selectedImageIndex']??0;
+    _counter = map['totalMeritCount']??0;
+    recordMeritList = await DbManager.instance.meritRecordDao.queryRecord();
+    setState(() {});
   }
 
   @override
@@ -168,15 +169,15 @@ class _TempleBlockPageState extends State<TempleBlockPage>
       _addCounter = knockValue;
       _counter += _addCounter;
       String id = uuid.v4();
-      recordMeritList.insert(
-          0,
-          MeritRecord(
-            id,
-            DateTime.now().millisecondsSinceEpoch,
-            _addCounter,
-            selectedImage,
-            selectedSoundName,
-          ));
+      MeritRecord meritRecord = MeritRecord(
+        id,
+        DateTime.now().millisecondsSinceEpoch,
+        _addCounter,
+        selectedImage,
+        selectedSoundName,
+      );
+      DbManager.instance.meritRecordDao.insertRecord(meritRecord);
+      recordMeritList.insert(0, meritRecord);
     });
   }
 

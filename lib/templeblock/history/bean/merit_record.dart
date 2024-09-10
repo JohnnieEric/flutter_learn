@@ -12,4 +12,12 @@ class MeritRecord {
   String toString() {
     return 'MeritRecord{id: $id, timestamp: $timestamp, addMeritCount: $addMeritCount, image: $image, sound: $sound}';
   }
+  
+  Map<String,dynamic>  toMap()  =>{
+    "id":id,
+    "timestamp":timestamp,
+    "addMeritCount":addMeritCount,
+    "image":image,
+    "sound":sound,
+  };
 }

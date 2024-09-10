@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_learn_demo/app_navigation.dart';
+import 'package:flutter_learn_demo/db_manager.dart';
 
-void main() {
+main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DbManager.instance.open();
   runApp(const MyApp());
 }
 

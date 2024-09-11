@@ -3,6 +3,7 @@ import 'package:flutter_learn_demo/app_bottom_bar.dart';
 import 'package:flutter_learn_demo/guess/guess_page.dart';
 import 'package:flutter_learn_demo/templeblock/temple_block_page.dart';
 
+import 'article/net_article_page.dart';
 import 'drawing/drawing_page.dart';
 import 'menu_data.dart';
 
@@ -21,6 +22,7 @@ class _AppNavigationState extends State<AppNavigation> {
   final PageController controller = PageController();
 
   final List<MenuData> menus = const [
+    MenuData(label: '网络文章', icon: Icons.article_outlined),
     MenuData(label: '猜数字', icon: Icons.question_mark),
     MenuData(label: '电子木鱼', icon: Icons.my_library_music_outlined),
     MenuData(label: '白板绘制', icon: Icons.palette_outlined),
@@ -50,9 +52,10 @@ class _AppNavigationState extends State<AppNavigation> {
       physics: const NeverScrollableScrollPhysics(),
       controller: controller,
       children: const [
+        NetArticlePage(),
         GuessPage(title: '猜数字'),
         TempleBlockPage(),
-        DrawingPage()
+        DrawingPage(),
       ],
     );
   }

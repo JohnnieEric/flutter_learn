@@ -43,7 +43,7 @@ dependencies:
   path: ^1.9.0
   dio: ^5.7.0
   webview_flutter: ^4.8.0
-
+  easy_refresh: ^3.4.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
